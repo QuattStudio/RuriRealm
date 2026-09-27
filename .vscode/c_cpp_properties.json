@@ -8,7 +8,8 @@
             "defines": [
                 "_DEBUG",
                 "UNICODE",
-                "_UNICODE"
+                "_UNICODE",
+                "_GLFW_WIN32"
             ],
             "compilerPath": "Z:\\pls\\mingw64\\bin\\gcc.exe",
             "cStandard": "c23",

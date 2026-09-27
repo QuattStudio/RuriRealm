@@ -28,7 +28,7 @@
 #include "internal.h"
 #include "core/platform.h"
 
-#if defined(RPLATFORM_WINDOWS)
+#if defined(_GLFW_WIN32)
 
 #include <stdlib.h>
 #include <string.h>
@@ -100,7 +100,7 @@ static _GLFWmonitor* createMonitor(DISPLAY_DEVICEW* adapter,
     _glfw_free(name);
 
     if (adapter->StateFlags & DISPLAY_DEVICE_MODESPRUNED)
-        monitor->win32.modesPruned = GLFW_TRUE;
+        monitor->win32.modesPruned = true;
 
     wcscpy(monitor->win32.adapterName, adapter->DeviceName);
     WideCharToMultiByte(CP_UTF8, 0,
@@ -277,7 +277,7 @@ void _glfwSetVideoModeWin32(_GLFWmonitor* monitor, const GLFWvidmode* desired)
                                       CDS_FULLSCREEN,
                                       NULL);
     if (result == DISP_CHANGE_SUCCESSFUL)
-        monitor->win32.modeChanged = GLFW_TRUE;
+        monitor->win32.modeChanged = true;
     else
     {
         const char* description = "Unknown error";
@@ -311,7 +311,7 @@ void _glfwRestoreVideoModeWin32(_GLFWmonitor* monitor)
     {
         ChangeDisplaySettingsExW(monitor->win32.adapterName,
                                  NULL, NULL, CDS_FULLSCREEN, NULL);
-        monitor->win32.modeChanged = GLFW_FALSE;
+        monitor->win32.modeChanged = false;
     }
 }
 
@@ -472,7 +472,7 @@ GLFWvidmode* _glfwGetVideoModesWin32(_GLFWmonitor* monitor, int* count)
     return result;
 }
 
-GLFWbool _glfwGetVideoModeWin32(_GLFWmonitor* monitor, GLFWvidmode* mode)
+bool _glfwGetVideoModeWin32(_GLFWmonitor* monitor, GLFWvidmode* mode)
 {
     DEVMODEW dm;
     ZeroMemory(&dm, sizeof(dm));
@@ -481,7 +481,7 @@ GLFWbool _glfwGetVideoModeWin32(_GLFWmonitor* monitor, GLFWvidmode* mode)
     if (!EnumDisplaySettingsW(monitor->win32.adapterName, ENUM_CURRENT_SETTINGS, &dm))
     {
         _glfwInputError(GLFW_PLATFORM_ERROR, "Win32: Failed to query display settings");
-        return GLFW_FALSE;
+        return false;
     }
 
     mode->width  = dm.dmPelsWidth;
@@ -492,10 +492,10 @@ GLFWbool _glfwGetVideoModeWin32(_GLFWmonitor* monitor, GLFWvidmode* mode)
                   &mode->greenBits,
                   &mode->blueBits);
 
-    return GLFW_TRUE;
+    return true;
 }
 
-GLFWbool _glfwGetGammaRampWin32(_GLFWmonitor* monitor, GLFWgammaramp* ramp)
+bool _glfwGetGammaRampWin32(_GLFWmonitor* monitor, GLFWgammaramp* ramp)
 {
     HDC dc;
     WORD values[3][256];
@@ -510,7 +510,7 @@ GLFWbool _glfwGetGammaRampWin32(_GLFWmonitor* monitor, GLFWgammaramp* ramp)
     memcpy(ramp->green, values[1], sizeof(values[1]));
     memcpy(ramp->blue,  values[2], sizeof(values[2]));
 
-    return GLFW_TRUE;
+    return true;
 }
 
 void _glfwSetGammaRampWin32(_GLFWmonitor* monitor, const GLFWgammaramp* ramp)

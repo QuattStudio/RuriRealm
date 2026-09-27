@@ -167,52 +167,6 @@ typedef enum
  #define DIDFT_OPTIONAL 0x80000000
 #endif
 
-#define WGL_NUMBER_PIXEL_FORMATS_ARB 0x2000
-#define WGL_SUPPORT_OPENGL_ARB 0x2010
-#define WGL_DRAW_TO_WINDOW_ARB 0x2001
-#define WGL_PIXEL_TYPE_ARB 0x2013
-#define WGL_TYPE_RGBA_ARB 0x202b
-#define WGL_ACCELERATION_ARB 0x2003
-#define WGL_NO_ACCELERATION_ARB 0x2025
-#define WGL_RED_BITS_ARB 0x2015
-#define WGL_RED_SHIFT_ARB 0x2016
-#define WGL_GREEN_BITS_ARB 0x2017
-#define WGL_GREEN_SHIFT_ARB 0x2018
-#define WGL_BLUE_BITS_ARB 0x2019
-#define WGL_BLUE_SHIFT_ARB 0x201a
-#define WGL_ALPHA_BITS_ARB 0x201b
-#define WGL_ALPHA_SHIFT_ARB 0x201c
-#define WGL_ACCUM_BITS_ARB 0x201d
-#define WGL_ACCUM_RED_BITS_ARB 0x201e
-#define WGL_ACCUM_GREEN_BITS_ARB 0x201f
-#define WGL_ACCUM_BLUE_BITS_ARB 0x2020
-#define WGL_ACCUM_ALPHA_BITS_ARB 0x2021
-#define WGL_DEPTH_BITS_ARB 0x2022
-#define WGL_STENCIL_BITS_ARB 0x2023
-#define WGL_AUX_BUFFERS_ARB 0x2024
-#define WGL_STEREO_ARB 0x2012
-#define WGL_DOUBLE_BUFFER_ARB 0x2011
-#define WGL_SAMPLES_ARB 0x2042
-#define WGL_FRAMEBUFFER_SRGB_CAPABLE_ARB 0x20a9
-#define WGL_CONTEXT_DEBUG_BIT_ARB 0x00000001
-#define WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB 0x00000002
-#define WGL_CONTEXT_PROFILE_MASK_ARB 0x9126
-#define WGL_CONTEXT_CORE_PROFILE_BIT_ARB 0x00000001
-#define WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB 0x00000002
-#define WGL_CONTEXT_MAJOR_VERSION_ARB 0x2091
-#define WGL_CONTEXT_MINOR_VERSION_ARB 0x2092
-#define WGL_CONTEXT_FLAGS_ARB 0x2094
-#define WGL_CONTEXT_ES2_PROFILE_BIT_EXT 0x00000004
-#define WGL_CONTEXT_ROBUST_ACCESS_BIT_ARB 0x00000004
-#define WGL_LOSE_CONTEXT_ON_RESET_ARB 0x8252
-#define WGL_CONTEXT_RESET_NOTIFICATION_STRATEGY_ARB 0x8256
-#define WGL_NO_RESET_NOTIFICATION_ARB 0x8261
-#define WGL_CONTEXT_RELEASE_BEHAVIOR_ARB 0x2097
-#define WGL_CONTEXT_RELEASE_BEHAVIOR_NONE_ARB 0
-#define WGL_CONTEXT_RELEASE_BEHAVIOR_FLUSH_ARB 0x2098
-#define WGL_CONTEXT_OPENGL_NO_ERROR_ARB 0x31b3
-#define WGL_COLORSPACE_EXT 0x309d
-#define WGL_COLORSPACE_SRGB_EXT 0x3089
 
 #define ERROR_INVALID_VERSION_ARB 0x2095
 #define ERROR_INVALID_PROFILE_ARB 0x2096
@@ -266,11 +220,6 @@ typedef BOOL (WINAPI * PFNWGLGETPIXELFORMATATTRIBIVARBPROC)(HDC,int,int,UINT,con
 typedef const char* (WINAPI * PFNWGLGETEXTENSIONSSTRINGEXTPROC)(void);
 typedef const char* (WINAPI * PFNWGLGETEXTENSIONSSTRINGARBPROC)(HDC);
 typedef HGLRC (WINAPI * PFNWGLCREATECONTEXTATTRIBSARBPROC)(HDC,HGLRC,const int*);
-#define wglSwapIntervalEXT _glfw.wgl.SwapIntervalEXT
-#define wglGetPixelFormatAttribivARB _glfw.wgl.GetPixelFormatAttribivARB
-#define wglGetExtensionsStringEXT _glfw.wgl.GetExtensionsStringEXT
-#define wglGetExtensionsStringARB _glfw.wgl.GetExtensionsStringARB
-#define wglCreateContextAttribsARB _glfw.wgl.CreateContextAttribsARB
 
 // opengl32.dll function pointer typedefs
 typedef HGLRC (WINAPI * PFN_wglCreateContext)(HDC);
@@ -280,13 +229,6 @@ typedef HDC (WINAPI * PFN_wglGetCurrentDC)(void);
 typedef HGLRC (WINAPI * PFN_wglGetCurrentContext)(void);
 typedef BOOL (WINAPI * PFN_wglMakeCurrent)(HDC,HGLRC);
 typedef BOOL (WINAPI * PFN_wglShareLists)(HGLRC,HGLRC);
-#define wglCreateContext _glfw.wgl.CreateContext
-#define wglDeleteContext _glfw.wgl.DeleteContext
-#define wglGetProcAddress _glfw.wgl.GetProcAddress
-#define wglGetCurrentDC _glfw.wgl.GetCurrentDC
-#define wglGetCurrentContext _glfw.wgl.GetCurrentContext
-#define wglMakeCurrent _glfw.wgl.MakeCurrent
-#define wglShareLists _glfw.wgl.ShareLists
 
 typedef VkFlags VkWin32SurfaceCreateFlagsKHR;
 
@@ -306,9 +248,6 @@ typedef VkBool32 (APIENTRY *PFN_vkGetPhysicalDeviceWin32PresentationSupportKHR)(
 #define GLFW_WIN32_LIBRARY_WINDOW_STATE _GLFWlibraryWin32 win32;
 #define GLFW_WIN32_MONITOR_STATE        _GLFWmonitorWin32 win32;
 #define GLFW_WIN32_CURSOR_STATE         _GLFWcursorWin32  win32;
-
-#define GLFW_WGL_CONTEXT_STATE          _GLFWcontextWGL wgl;
-#define GLFW_WGL_LIBRARY_CONTEXT_STATE  _GLFWlibraryWGL wgl;
 
 
 
@@ -429,7 +368,7 @@ typedef struct _GLFWcursorWin32
 
 
 bool _glfwConnectWin32(int platformID, _GLFWplatform* platform);
-int _glfwInitWin32(void);
+bool _glfwInitWin32(void);
 void _glfwTerminateWin32(void);
 
 WCHAR* _glfwCreateWideStringFromUTF8Win32(const char* source);
@@ -444,15 +383,13 @@ void _glfwSetVideoModeWin32(_GLFWmonitor* monitor, const GLFWvidmode* desired);
 void _glfwRestoreVideoModeWin32(_GLFWmonitor* monitor);
 void _glfwGetHMONITORContentScaleWin32(HMONITOR handle, float* xscale, float* yscale);
 
-bool _glfwCreateWindowWin32(_GLFWwindow* window, const _GLFWwndconfig* wndconfig, const _GLFWctxconfig* ctxconfig, const _GLFWfbconfig* fbconfig);
+bool _glfwCreateWindowWin32(_GLFWwindow* window, const _GLFWwndconfig* wndconfig, const _GLFWfbconfig* fbconfig);
 void _glfwDestroyWindowWin32(_GLFWwindow* window);
-void _glfwSetWindowTitleWin32(_GLFWwindow* window, const char* title);
 void _glfwSetWindowIconWin32(_GLFWwindow* window, int count, const GLFWimage* images);
 void _glfwGetWindowPosWin32(_GLFWwindow* window, int* xpos, int* ypos);
 void _glfwSetWindowPosWin32(_GLFWwindow* window, int xpos, int ypos);
 void _glfwGetWindowSizeWin32(_GLFWwindow* window, int* width, int* height);
 void _glfwSetWindowSizeWin32(_GLFWwindow* window, int width, int height);
-void _glfwSetWindowSizeLimitsWin32(_GLFWwindow* window, int minwidth, int minheight, int maxwidth, int maxheight);
 void _glfwSetWindowAspectRatioWin32(_GLFWwindow* window, int numer, int denom);
 void _glfwGetFramebufferSizeWin32(_GLFWwindow* window, int* width, int* height);
 void _glfwGetWindowFrameSizeWin32(_GLFWwindow* window, int* left, int* top, int* right, int* bottom);
@@ -475,8 +412,6 @@ void _glfwSetWindowResizableWin32(_GLFWwindow* window, bool enabled);
 void _glfwSetWindowDecoratedWin32(_GLFWwindow* window, bool enabled);
 void _glfwSetWindowFloatingWin32(_GLFWwindow* window, bool enabled);
 void _glfwSetWindowMousePassthroughWin32(_GLFWwindow* window, bool enabled);
-float _glfwGetWindowOpacityWin32(_GLFWwindow* window);
-void _glfwSetWindowOpacityWin32(_GLFWwindow* window, f32 opacity);
 
 void _glfwSetRawMouseMotionWin32(_GLFWwindow *window, bool enabled);
 bool _glfwRawMouseMotionSupportedWin32(void);
@@ -517,10 +452,4 @@ void _glfwTerminateJoysticksWin32(void);
 bool _glfwPollJoystickWin32(_GLFWjoystick* js, int mode);
 const char* _glfwGetMappingNameWin32(void);
 void _glfwUpdateGamepadGUIDWin32(char* guid);
-
-bool _glfwInitWGL(void);
-void _glfwTerminateWGL(void);
-bool _glfwCreateContextWGL(_GLFWwindow* window,
-                               const _GLFWctxconfig* ctxconfig,
-                               const _GLFWfbconfig* fbconfig);
 

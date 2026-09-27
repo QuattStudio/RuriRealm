@@ -28,7 +28,7 @@
 #include "internal.h"
 #include "core/platform.h"
 
-#if RPLATFORM_WINDOWS
+#if defined(_GLFW_WIN32)
 
 #include <stdlib.h>
 
@@ -57,16 +57,8 @@ __declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
 
 #endif // _GLFW_USE_HYBRID_HPG
 
-#if defined(_GLFW_BUILD_DLL)
 
-// GLFW DLL entry point
-//
-BOOL WINAPI DllMain(HINSTANCE instance, DWORD reason, LPVOID reserved)
-{
-    return TRUE;
-}
 
-#endif // _GLFW_BUILD_DLL
 
 // Load necessary libraries (DLLs)
 //
@@ -164,7 +156,7 @@ static bool loadLibraries(void)
             _glfwPlatformGetModuleSymbol(_glfw.win32.ntdll.instance, "RtlVerifyVersionInfo");
     }
 
-    return GLFW_TRUE;
+    return true;
 }
 
 // Unload used libraries (DLLs)
@@ -630,13 +622,10 @@ bool _glfwConnectWin32(int platformID, _GLFWplatform* platform)
         .setGammaRamp = _glfwSetGammaRampWin32,
         .createWindow = _glfwCreateWindowWin32,
         .destroyWindow = _glfwDestroyWindowWin32,
-        .setWindowTitle = _glfwSetWindowTitleWin32,
         .setWindowIcon = _glfwSetWindowIconWin32,
         .getWindowPos = _glfwGetWindowPosWin32,
         .setWindowPos = _glfwSetWindowPosWin32,
         .getWindowSize = _glfwGetWindowSizeWin32,
-        .setWindowSize = _glfwSetWindowSizeWin32,
-        .setWindowSizeLimits = _glfwSetWindowSizeLimitsWin32,
         .setWindowAspectRatio = _glfwSetWindowAspectRatioWin32,
         .getFramebufferSize = _glfwGetFramebufferSizeWin32,
         .getWindowFrameSize = _glfwGetWindowFrameSizeWin32,
@@ -655,19 +644,14 @@ bool _glfwConnectWin32(int platformID, _GLFWplatform* platform)
         .windowMaximized = _glfwWindowMaximizedWin32,
         .windowHovered = _glfwWindowHoveredWin32,
         .framebufferTransparent = _glfwFramebufferTransparentWin32,
-        .getWindowOpacity = _glfwGetWindowOpacityWin32,
         .setWindowResizable = _glfwSetWindowResizableWin32,
         .setWindowDecorated = _glfwSetWindowDecoratedWin32,
         .setWindowFloating = _glfwSetWindowFloatingWin32,
-        .setWindowOpacity = _glfwSetWindowOpacityWin32,
         .setWindowMousePassthrough = _glfwSetWindowMousePassthroughWin32,
         .pollEvents = _glfwPollEventsWin32,
         .waitEvents = _glfwWaitEventsWin32,
         .waitEventsTimeout = _glfwWaitEventsTimeoutWin32,
         .postEmptyEvent = _glfwPostEmptyEventWin32,
-        .getEGLPlatform = _glfwGetEGLPlatformWin32,
-        .getEGLNativeDisplay = _glfwGetEGLNativeDisplayWin32,
-        .getEGLNativeWindow = _glfwGetEGLNativeWindowWin32,
         .getRequiredInstanceExtensions = _glfwGetRequiredInstanceExtensionsWin32,
         .getPhysicalDevicePresentationSupport = _glfwGetPhysicalDevicePresentationSupportWin32,
         .createWindowSurface = _glfwCreateWindowSurfaceWin32
@@ -677,7 +661,7 @@ bool _glfwConnectWin32(int platformID, _GLFWplatform* platform)
     return true;
 }
 
-int _glfwInitWin32(void)
+bool _glfwInitWin32(void)
 {
     if (!loadLibraries())
         return false;

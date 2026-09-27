@@ -97,8 +97,6 @@ static void terminate(void)
 
     memset(&_glfw.callbacks, 0, sizeof(_glfw.callbacks));
 
-    while (_glfw.windowListHead)
-        glfwDestroyWindow((GLFWwindow*) _glfw.windowListHead);
 
     while (_glfw.cursorListHead)
         glfwDestroyCursor((GLFWcursor*) _glfw.cursorListHead);
@@ -382,11 +380,14 @@ void _glfwInputError(int code, const char* format, ...)
 //////////////////////////////////////////////////////////////////////////
 //////                        GLFW public API                       //////
 //////////////////////////////////////////////////////////////////////////
-
+#include <stdio.h>
 GLFWAPI int glfwInit(void)
 {
+    printf("glfw initialzing...\n");
     if (_glfw.initialized)
         return true;
+    printf("glfw initialzing 2...\n");
+    
 
     memset(&_glfw, 0, sizeof(_glfw));
     _glfw.hints.init = _glfwInitHints;
@@ -399,8 +400,11 @@ GLFWAPI int glfwInit(void)
         _glfw.allocator.deallocate = defaultDeallocate;
     }
 
+    printf("selecting platform...\n");
+
     if (!_glfwSelectPlatform(_glfw.hints.init.platformID, &_glfw.platform))
         return false;
+    printf("platform selected\n");
 
     if (!_glfw.platform.init())
     {

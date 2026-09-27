@@ -1218,7 +1218,6 @@
 #define GLFW_PLATFORM_COCOA         0x00060002
 #define GLFW_PLATFORM_WAYLAND       0x00060003
 #define GLFW_PLATFORM_X11           0x00060004
-#define GLFW_PLATFORM_NULL          0x00060005
 /*! @} */
 
 #define GLFW_DONT_CARE              -1

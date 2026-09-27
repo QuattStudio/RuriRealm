@@ -2,26 +2,27 @@ CC = gcc
 CFLAGS = -Wall -Wextra -O2 -Isrc/glfw/include
 
 # GLFW source files
-GLFW_SRCS = src/glfw/context.c \
-            src/glfw/init.c \
-            src/glfw/input.c \
-            src/glfw/monitor.c \
-            src/glfw/window.c \
-            src/glfw/vulkan.c \
-            src/glfw/egl_context.c \
-            src/glfw/win32_init.c \
-            src/glfw/win32_monitor.c \
-            src/glfw/win32_window.c \
-            src/glfw/win32_joystick.c \
-            src/glfw/egl_context.c
+GLFW_SRCS = src/glfw/src/platform.c \
+            src/glfw/src/init.c \
+            src/glfw/src/input.c \
+            src/glfw/src/monitor.c \
+            src/glfw/src/window.c \
+            src/glfw/src/vulkan.c \
+            src/glfw/src/win32_init.c \
+            src/glfw/src/win32_monitor.c \
+            src/glfw/src/win32_window.c \
+            src/glfw/src/win32_joystick.c \
+            src/glfw/src/win32_thread.c \
+            src/glfw/src/win32_time.c \
+            src/glfw/src/win32_module.c 
 
 # Your source files
 YOUR_SRCS = src/main.c
 
-all: myapp.exe
+all: Ruri.exe
 
-myapp.exe: $(YOUR_SRCS) $(GLFW_SRCS)
-	$(CC) $(CFLAGS) -o myapp.exe $^ -luser32 -lshell32 -lwinmm -lgdi32
+Ruri.exe: $(YOUR_SRCS) $(GLFW_SRCS)
+	$(CC) $(CFLAGS) -Iinclude -D_GLFW_WIN32 -o Ruri.exe $^ -luser32 -lshell32 -lwinmm -lgdi32
 
 clean:
-	rm -f myapp.exe
+	rm -f Ruri.exe

@@ -70,7 +70,6 @@ typedef void (*GLFWproc)(void);
 typedef struct _GLFWerror       _GLFWerror;
 typedef struct _GLFWinitconfig  _GLFWinitconfig;
 typedef struct _GLFWwndconfig   _GLFWwndconfig;
-typedef struct _GLFWctxconfig   _GLFWctxconfig;
 typedef struct _GLFWfbconfig    _GLFWfbconfig;
 typedef struct _GLFWcontext     _GLFWcontext;
 typedef struct _GLFWwindow      _GLFWwindow;
@@ -508,6 +507,7 @@ struct _GLFWlibrary
 {
     bool                initialized;
     GLFWallocator       allocator;
+    _GLFWwindow* window;
 
     _GLFWplatform       platform;
 
@@ -562,7 +562,6 @@ struct _GLFWlibrary
 
     // These are defined in platform.h
     GLFW_PLATFORM_LIBRARY_WINDOW_STATE
-    GLFW_PLATFORM_LIBRARY_CONTEXT_STATE
     GLFW_PLATFORM_LIBRARY_JOYSTICK_STATE
 };
 
@@ -642,8 +641,7 @@ bool _glfwStringInExtensionString(const char* string, const char* extensions);
 const _GLFWfbconfig* _glfwChooseFBConfig(const _GLFWfbconfig* desired,
                                          const _GLFWfbconfig* alternatives,
                                          u32 count);
-bool _glfwRefreshContextAttribs(_GLFWwindow* window, const _GLFWctxconfig* ctxconfig);
-bool _glfwIsValidContextConfig(const _GLFWctxconfig* ctxconfig);
+
 
 const GLFWvidmode* _glfwChooseVideoMode(_GLFWmonitor* monitor, const GLFWvidmode* desired);
 int _glfwCompareVideoModes(const GLFWvidmode* first, const GLFWvidmode* second);

@@ -39,7 +39,7 @@
 //
 typedef struct _GLFWtlsWin32
 {
-    GLFWbool            allocated;
+    bool            allocated;
     DWORD               index;
 } _GLFWtlsWin32;
 
@@ -47,7 +47,7 @@ typedef struct _GLFWtlsWin32
 //
 typedef struct _GLFWmutexWin32
 {
-    GLFWbool            allocated;
+    bool            allocated;
     CRITICAL_SECTION    section;
 } _GLFWmutexWin32;
 

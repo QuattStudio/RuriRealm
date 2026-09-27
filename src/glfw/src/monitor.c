@@ -64,17 +64,17 @@ static int compareVideoModes(const void* fp, const void* sp)
 
 // Retrieves the available modes for the specified monitor
 //
-static GLFWbool refreshVideoModes(_GLFWmonitor* monitor)
+static bool refreshVideoModes(_GLFWmonitor* monitor)
 {
     int modeCount;
     GLFWvidmode* modes;
 
     if (monitor->modes)
-        return GLFW_TRUE;
+        return true;
 
     modes = _glfw.platform.getVideoModes(monitor, &modeCount);
     if (!modes)
-        return GLFW_FALSE;
+        return false;
 
     qsort(modes, modeCount, sizeof(GLFWvidmode), compareVideoModes);
 
@@ -82,7 +82,7 @@ static GLFWbool refreshVideoModes(_GLFWmonitor* monitor)
     monitor->modes = modes;
     monitor->modeCount = modeCount;
 
-    return GLFW_TRUE;
+    return true;
 }
 
 
@@ -91,7 +91,7 @@ static GLFWbool refreshVideoModes(_GLFWmonitor* monitor)
 //////////////////////////////////////////////////////////////////////////
 
 // Notifies shared code of a monitor connection or disconnection
-//
+
 void _glfwInputMonitor(_GLFWmonitor* monitor, int action, int placement)
 {
     assert(monitor != NULL);
@@ -117,22 +117,17 @@ void _glfwInputMonitor(_GLFWmonitor* monitor, int action, int placement)
     }
     else if (action == GLFW_DISCONNECTED)
     {
-        int i;
-        _GLFWwindow* window;
+        _GLFWwindow* window = _glfw.window;
 
-        for (window = _glfw.windowListHead;  window;  window = window->next)
-        {
-            if (window->monitor == monitor)
-            {
-                int width, height, xoff, yoff;
-                _glfw.platform.getWindowSize(window, &width, &height);
-                _glfw.platform.setWindowMonitor(window, NULL, 0, 0, width, height, 0);
-                _glfw.platform.getWindowFrameSize(window, &xoff, &yoff, NULL, NULL);
-                _glfw.platform.setWindowPos(window, xoff, yoff);
-            }
-        }
+        
+        int width, height, xoff, yoff;
+        _glfw.platform.getWindowSize(window, &width, &height);
+        _glfw.platform.setWindowMonitor(window, NULL, 0, 0, width, height, 0);
+        _glfw.platform.getWindowFrameSize(window, &xoff, &yoff, NULL, NULL);
+        _glfw.platform.setWindowPos(window, xoff, yoff);
 
-        for (i = 0;  i < _glfw.monitorCount;  i++)
+
+        for (int i = 0;  i < _glfw.monitorCount;  i++)
         {
             if (_glfw.monitors[i] == monitor)
             {

@@ -190,21 +190,21 @@ static int compareJoystickObjects(const void* first, const void* second)
 // Checks whether the specified device supports XInput
 // Technique from FDInputJoystickManager::IsXInputDeviceFast in ZDoom
 //
-static GLFWbool supportsXInput(const GUID* guid)
+static bool supportsXInput(const GUID* guid)
 {
     UINT i, count = 0;
     RAWINPUTDEVICELIST* ridl;
-    GLFWbool result = GLFW_FALSE;
+    bool result = false;
 
     if (GetRawInputDeviceList(NULL, &count, sizeof(RAWINPUTDEVICELIST)) != 0)
-        return GLFW_FALSE;
+        return false;
 
     ridl = _glfw_calloc(count, sizeof(RAWINPUTDEVICELIST));
 
     if (GetRawInputDeviceList(ridl, &count, sizeof(RAWINPUTDEVICELIST)) == (UINT) -1)
     {
         _glfw_free(ridl);
-        return GLFW_FALSE;
+        return false;
     }
 
     for (i = 0;  i < count;  i++)
@@ -243,7 +243,7 @@ static GLFWbool supportsXInput(const GUID* guid)
         name[sizeof(name) - 1] = '\0';
         if (strstr(name, "IG_"))
         {
-            result = GLFW_TRUE;
+            result = true;
             break;
         }
     }
@@ -570,7 +570,7 @@ void _glfwDetectJoystickDisconnectionWin32(void)
 //////                       GLFW platform API                      //////
 //////////////////////////////////////////////////////////////////////////
 
-GLFWbool _glfwInitJoysticksWin32(void)
+bool _glfwInitJoysticksWin32(void)
 {
     if (_glfw.win32.dinput8.instance)
     {
@@ -582,12 +582,12 @@ GLFWbool _glfwInitJoysticksWin32(void)
         {
             _glfwInputError(GLFW_PLATFORM_ERROR,
                             "Win32: Failed to create interface");
-            return GLFW_FALSE;
+            return false;
         }
     }
 
     _glfwDetectJoystickConnectionWin32();
-    return GLFW_TRUE;
+    return true;
 }
 
 void _glfwTerminateJoysticksWin32(void)
@@ -601,7 +601,7 @@ void _glfwTerminateJoysticksWin32(void)
         IDirectInput8_Release(_glfw.win32.dinput8.api);
 }
 
-GLFWbool _glfwPollJoystickWin32(_GLFWjoystick* js, int mode)
+bool _glfwPollJoystickWin32(_GLFWjoystick* js, int mode)
 {
     if (js->win32.device)
     {
@@ -625,11 +625,11 @@ GLFWbool _glfwPollJoystickWin32(_GLFWjoystick* js, int mode)
         if (FAILED(result))
         {
             closeJoystick(js);
-            return GLFW_FALSE;
+            return false;
         }
 
         if (mode == _GLFW_POLL_PRESENCE)
-            return GLFW_TRUE;
+            return true;
 
         for (i = 0;  i < js->win32.objectCount;  i++)
         {
@@ -706,11 +706,11 @@ GLFWbool _glfwPollJoystickWin32(_GLFWjoystick* js, int mode)
             if (result == ERROR_DEVICE_NOT_CONNECTED)
                 closeJoystick(js);
 
-            return GLFW_FALSE;
+            return false;
         }
 
         if (mode == _GLFW_POLL_PRESENCE)
-            return GLFW_TRUE;
+            return true;
 
         _glfwInputJoystickAxis(js, 0, (xis.Gamepad.sThumbLX + 0.5f) / 32767.5f);
         _glfwInputJoystickAxis(js, 1, -(xis.Gamepad.sThumbLY + 0.5f) / 32767.5f);
@@ -744,7 +744,7 @@ GLFWbool _glfwPollJoystickWin32(_GLFWjoystick* js, int mode)
         _glfwInputJoystickHat(js, 0, dpad);
     }
 
-    return GLFW_TRUE;
+    return true;
 }
 
 const char* _glfwGetMappingNameWin32(void)
