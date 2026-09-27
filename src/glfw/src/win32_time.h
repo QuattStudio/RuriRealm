@@ -31,6 +31,8 @@
 #undef APIENTRY
 
 #include <windows.h>
+#include "library/types.h"
+
 
 #define GLFW_WIN32_LIBRARY_TIMER_STATE  _GLFWtimerWin32   win32;
 
@@ -38,6 +40,6 @@
 //
 typedef struct _GLFWtimerWin32
 {
-    uint64_t            frequency;
+    u64            frequency;
 } _GLFWtimerWin32;
 

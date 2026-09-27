@@ -108,7 +108,6 @@ static const GLFWimage* chooseImage(int count, const GLFWimage* images,
 //
 static HICON createIcon(const GLFWimage* image, int xhot, int yhot, bool icon)
 {
-    int i;
     HDC dc;
     HICON handle;
     HBITMAP color, mask;
@@ -154,7 +153,7 @@ static HICON createIcon(const GLFWimage* image, int xhot, int yhot, bool icon)
         return NULL;
     }
 
-    for (i = 0;  i < image->width * image->height;  i++)
+    for (int i = 0;  i < image->width * image->height;  i++)
     {
         target[0] = source[2];
         target[1] = source[1];
@@ -204,11 +203,11 @@ static void applyAspectRatio(_GLFWwindow* window, int edge, RECT* area)
 
     if (_glfwIsWindows10Version1607OrGreaterWin32())
     {
-        AdjustWindowRectExForDpi(&frame, style, FALSE, exStyle,
+        AdjustWindowRectExForDpi(&frame, style, false, exStyle,
                                  GetDpiForWindow(window->win32.handle));
     }
     else
-        AdjustWindowRectEx(&frame, style, FALSE, exStyle);
+        AdjustWindowRectEx(&frame, style, false, exStyle);
 
     if (edge == WMSZ_LEFT  || edge == WMSZ_BOTTOMLEFT ||
         edge == WMSZ_RIGHT || edge == WMSZ_BOTTOMRIGHT)
@@ -359,12 +358,12 @@ static void updateWindowStyles(const _GLFWwindow* window)
 
     if (_glfwIsWindows10Version1607OrGreaterWin32())
     {
-        AdjustWindowRectExForDpi(&rect, style, FALSE,
+        AdjustWindowRectExForDpi(&rect, style, false,
                                  getWindowExStyle(window),
                                  GetDpiForWindow(window->win32.handle));
     }
     else
-        AdjustWindowRectEx(&rect, style, FALSE, getWindowExStyle(window));
+        AdjustWindowRectEx(&rect, style, false, getWindowExStyle(window));
 
     ClientToScreen(window->win32.handle, (POINT*) &rect.left);
     ClientToScreen(window->win32.handle, (POINT*) &rect.right);
@@ -392,7 +391,7 @@ static void updateFramebufferTransparency(const _GLFWwindow* window)
         DWM_BLURBEHIND bb = {0};
         bb.dwFlags = DWM_BB_ENABLE | DWM_BB_BLURREGION;
         bb.hRgnBlur = region;
-        bb.fEnable = TRUE;
+        bb.fEnable = true;
 
         DwmEnableBlurBehindWindow(window->win32.handle, &bb);
         DeleteObject(region);
@@ -696,10 +695,10 @@ static LRESULT CALLBACK windowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM l
                 // WM_UNICHAR is not sent by Windows, but is sent by some
                 // third-party input method engine
                 // Returning TRUE here announces support for this message
-                return TRUE;
+                return true;
             }
 
-            _glfwInputChar(window, (uint32_t) wParam, getKeyMods(), true);
+            _glfwInputChar(window, (u32) wParam, getKeyMods(), true);
             return 0;
         }
 
@@ -850,7 +849,7 @@ static LRESULT CALLBACK windowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM l
                 ReleaseCapture();
 
             if (uMsg == WM_XBUTTONDOWN || uMsg == WM_XBUTTONUP)
-                return TRUE;
+                return true;
 
             return 0;
         }
@@ -1084,7 +1083,7 @@ static LRESULT CALLBACK windowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM l
             }
 
             applyAspectRatio(window, (int) wParam, (RECT*) lParam);
-            return TRUE;
+            return true;
         }
 
         case WM_GETMINMAXINFO:
@@ -1099,11 +1098,11 @@ static LRESULT CALLBACK windowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM l
 
             if (_glfwIsWindows10Version1607OrGreaterWin32())
             {
-                AdjustWindowRectExForDpi(&frame, style, FALSE, exStyle,
+                AdjustWindowRectExForDpi(&frame, style, false, exStyle,
                                          GetDpiForWindow(window->win32.handle));
             }
             else
-                AdjustWindowRectEx(&frame, style, FALSE, exStyle);
+                AdjustWindowRectEx(&frame, style, false, exStyle);
 
 
             if (!window->decorated)
@@ -1133,7 +1132,7 @@ static LRESULT CALLBACK windowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM l
 
         case WM_ERASEBKGND:
         {
-            return TRUE;
+            return true;
         }
 
         case WM_NCACTIVATE:
@@ -1142,7 +1141,7 @@ static LRESULT CALLBACK windowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM l
             // Prevent title bar from being drawn after restoring a minimized
             // undecorated window
             if (!window->decorated)
-                return TRUE;
+                return true;
 
             break;
         }
@@ -1167,17 +1166,17 @@ static LRESULT CALLBACK windowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM l
                 SIZE* size = (SIZE*) lParam;
 
                 AdjustWindowRectExForDpi(&source, getWindowStyle(window),
-                                         FALSE, getWindowExStyle(window),
+                                         false, getWindowExStyle(window),
                                          GetDpiForWindow(window->win32.handle));
                 AdjustWindowRectExForDpi(&target, getWindowStyle(window),
-                                         FALSE, getWindowExStyle(window),
+                                         false, getWindowExStyle(window),
                                          LOWORD(wParam));
 
                 size->cx += (target.right - target.left) -
                             (source.right - source.left);
                 size->cy += (target.bottom - target.top) -
                             (source.bottom - source.top);
-                return TRUE;
+                return true;
             }
 
             break;
@@ -1185,8 +1184,8 @@ static LRESULT CALLBACK windowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM l
 
         case WM_DPICHANGED:
         {
-            const float xscale = HIWORD(wParam) / (float) USER_DEFAULT_SCREEN_DPI;
-            const float yscale = LOWORD(wParam) / (float) USER_DEFAULT_SCREEN_DPI;
+            const float xscale = HIWORD(wParam) / (f32) USER_DEFAULT_SCREEN_DPI;
+            const float yscale = LOWORD(wParam) / (f32) USER_DEFAULT_SCREEN_DPI;
 
             // Resize windowed mode windows that either permit rescaling or that
             // need it to compensate for non-client area scaling
@@ -1212,7 +1211,7 @@ static LRESULT CALLBACK windowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM l
             if (LOWORD(lParam) == HTCLIENT)
             {
                 updateCursorImage(window);
-                return TRUE;
+                return true;
             }
 
             break;
@@ -1222,7 +1221,6 @@ static LRESULT CALLBACK windowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM l
         // {
         //     HDROP drop = (HDROP) wParam;
         //     POINT pt;
-        //     int i;
 
         //     const int count = DragQueryFileW(drop, 0xffffffff, NULL, 0);
         //     char** paths = _glfw_calloc(count, sizeof(char*));
@@ -1231,7 +1229,7 @@ static LRESULT CALLBACK windowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM l
         //     DragQueryPoint(drop, &pt);
         //     _glfwInputCursorPos(window, pt.x, pt.y);
 
-        //     for (i = 0;  i < count;  i++)
+        //     for (int i = 0;  i < count;  i++)
         //     {
         //         const UINT length = DragQueryFileW(drop, i, NULL, 0);
         //         WCHAR* buffer = _glfw_calloc((size_t) length + 1, sizeof(WCHAR));
@@ -1269,7 +1267,9 @@ static int createNativeWindow(_GLFWwindow* window,
 
     if (!_glfw.win32.mainWindowClass)
     {
-        WNDCLASSEXW wc = { sizeof(wc) };
+        WNDCLASSEXW wc = {0};
+        wc.cbSize = sizeof(wc);
+        
         wc.style         = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
         wc.lpfnWndProc   = windowProc;
         wc.hInstance     = _glfw.win32.instance;
@@ -1330,7 +1330,9 @@ static int createNativeWindow(_GLFWwindow* window,
 
     if (window->monitor)
     {
-        MONITORINFO mi = { sizeof(mi) };
+        MONITORINFO mi = { 0 };
+        mi.cbSize = sizeof(mi);
+
         GetMonitorInfoW(window->monitor->win32.handle, &mi);
 
         // NOTE: This window placement is temporary and approximate, as the
@@ -1589,13 +1591,13 @@ void _glfwSetWindowPosWin32(_GLFWwindow* window, int xpos, int ypos)
     if (_glfwIsWindows10Version1607OrGreaterWin32())
     {
         AdjustWindowRectExForDpi(&rect, getWindowStyle(window),
-                                 FALSE, getWindowExStyle(window),
+                                 false, getWindowExStyle(window),
                                  GetDpiForWindow(window->win32.handle));
     }
     else
     {
         AdjustWindowRectEx(&rect, getWindowStyle(window),
-                           FALSE, getWindowExStyle(window));
+                           false, getWindowExStyle(window));
     }
 
     SetWindowPos(window->win32.handle, NULL, rect.left, rect.top, 0, 0,
@@ -1630,13 +1632,13 @@ void _glfwSetWindowSizeWin32(_GLFWwindow* window, int width, int height)
         if (_glfwIsWindows10Version1607OrGreaterWin32())
         {
             AdjustWindowRectExForDpi(&rect, getWindowStyle(window),
-                                     FALSE, getWindowExStyle(window),
+                                     false, getWindowExStyle(window),
                                      GetDpiForWindow(window->win32.handle));
         }
         else
         {
             AdjustWindowRectEx(&rect, getWindowStyle(window),
-                               FALSE, getWindowExStyle(window));
+                               false, getWindowExStyle(window));
         }
 
         SetWindowPos(window->win32.handle, HWND_TOP,
@@ -1658,7 +1660,7 @@ void _glfwSetWindowAspectRatioWin32(_GLFWwindow* window, int numer, int denom)
     MoveWindow(window->win32.handle,
                area.left, area.top,
                area.right - area.left,
-               area.bottom - area.top, TRUE);
+               area.bottom - area.top, true);
 }
 
 void _glfwGetFramebufferSizeWin32(_GLFWwindow* window, int* width, int* height)
@@ -1679,13 +1681,13 @@ void _glfwGetWindowFrameSizeWin32(_GLFWwindow* window,
     if (_glfwIsWindows10Version1607OrGreaterWin32())
     {
         AdjustWindowRectExForDpi(&rect, getWindowStyle(window),
-                                 FALSE, getWindowExStyle(window),
+                                 false, getWindowExStyle(window),
                                  GetDpiForWindow(window->win32.handle));
     }
     else
     {
         AdjustWindowRectEx(&rect, getWindowStyle(window),
-                           FALSE, getWindowExStyle(window));
+                           false, getWindowExStyle(window));
     }
 
     if (left)
@@ -1751,7 +1753,7 @@ void _glfwHideWindowWin32(_GLFWwindow* window)
 
 void _glfwRequestWindowAttentionWin32(_GLFWwindow* window)
 {
-    FlashWindow(window->win32.handle, TRUE);
+    FlashWindow(window->win32.handle, true);
 }
 
 void _glfwFocusWindowWin32(_GLFWwindow* window)
@@ -1855,13 +1857,13 @@ void _glfwSetWindowMonitorWin32(_GLFWwindow* window,
         if (_glfwIsWindows10Version1607OrGreaterWin32())
         {
             AdjustWindowRectExForDpi(&rect, getWindowStyle(window),
-                                     FALSE, getWindowExStyle(window),
+                                     false, getWindowExStyle(window),
                                      GetDpiForWindow(window->win32.handle));
         }
         else
         {
             AdjustWindowRectEx(&rect, getWindowStyle(window),
-                               FALSE, getWindowExStyle(window));
+                               false, getWindowExStyle(window));
         }
 
         SetWindowPos(window->win32.handle, after,
@@ -1923,11 +1925,13 @@ bool _glfwFramebufferTransparentWin32(_GLFWwindow* window)
 void _glfwSetWindowResizableWin32(_GLFWwindow* window, bool enabled)
 {
     updateWindowStyles(window);
+    (void) enabled;
 }
 
 void _glfwSetWindowDecoratedWin32(_GLFWwindow* window, bool enabled)
 {
     updateWindowStyles(window);
+    (void) enabled;
 }
 
 void _glfwSetWindowFloatingWin32(_GLFWwindow* window, bool enabled)

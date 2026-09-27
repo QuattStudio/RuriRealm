@@ -449,7 +449,6 @@ GLFWAPI void glfwSetWindowShouldClose(GLFWwindow* handle, int value)
 GLFWAPI void glfwSetWindowIcon(GLFWwindow* handle,
                                int count, const GLFWimage* images)
 {
-    int i;
 
     assert(count >= 0);
     assert(count == 0 || images != NULL);
@@ -465,7 +464,7 @@ GLFWAPI void glfwSetWindowIcon(GLFWwindow* handle,
         return;
     }
 
-    for (i = 0; i < count; i++)
+    for (int i = 0; i < count; i++)
     {
         assert(images[i].pixels != NULL);
 

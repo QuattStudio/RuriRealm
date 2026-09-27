@@ -6,12 +6,30 @@
 cls
 
 
-
 if "%1"=="-publish" (
+
     git add .
-    git commit -m %2
+    git commit -m "%~2"
     git push
+
 ) else (
-    mingw32-make
-    Ruri
+
+    if "%1"=="" (
+
+        mingw32-make -j4
+        Ruri.exe
+
+
+    ) else if "%1"=="-rm" (
+
+        mingw32-make clean
+
+    ) else (
+
+        mingw32-make -j%1
+        Ruri.exe
+
+
+    )
+
 )

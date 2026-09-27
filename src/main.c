@@ -1,5 +1,7 @@
 #include <GLFW/glfw3.h>
 #include <stdio.h>
+#include "core/log.h"
+
 
 int main(void)
 {
@@ -8,6 +10,8 @@ int main(void)
         printf("Failed to initialize GLFW\n");
         return -1;
     }
+
+    RLOG_INFO("Initialization compeleted!");
 
     // Create a windowed mode window and its OpenGL context
     GLFWwindow* window = glfwCreateWindow(NULL);

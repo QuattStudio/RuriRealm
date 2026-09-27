@@ -34,6 +34,7 @@
 #include <assert.h>
 
 #include "library/types.h"
+#include "core/log.h"
 
 // NOTE: The global variables below comprise all mutable global data in GLFW
 //       Any other mutable global variable is a bug
@@ -74,6 +75,7 @@ static _GLFWinitconfig _glfwInitHints =
 static any defaultAllocate(usize size, any user)
 {
     return malloc(size);
+    (void) user;
 }
 
 // The deallocation function used when no custom allocator is set
@@ -81,6 +83,7 @@ static any defaultAllocate(usize size, any user)
 static void defaultDeallocate(any block, any user)
 {
     free(block);
+    (void) user;
 }
 
 // The reallocation function used when no custom allocator is set
@@ -88,6 +91,7 @@ static void defaultDeallocate(any block, any user)
 static any defaultReallocate(any block, usize size, any user)
 {
     return realloc(block, size);
+    (void) user;
 }
 
 // Terminate the library
@@ -383,10 +387,11 @@ void _glfwInputError(int code, const char* format, ...)
 #include <stdio.h>
 GLFWAPI int glfwInit(void)
 {
-    printf("glfw initialzing...\n");
+    RLOGI_INFO("GLFW: -Init- Initalizing....");
+
     if (_glfw.initialized)
         return true;
-    printf("glfw initialzing 2...\n");
+    
     
 
     memset(&_glfw, 0, sizeof(_glfw));
@@ -400,11 +405,12 @@ GLFWAPI int glfwInit(void)
         _glfw.allocator.deallocate = defaultDeallocate;
     }
 
-    printf("selecting platform...\n");
 
     if (!_glfwSelectPlatform(_glfw.hints.init.platformID, &_glfw.platform))
         return false;
-    printf("platform selected\n");
+
+    RLOGI_INFO("GLFW: -Init- Platform selected!");
+
 
     if (!_glfw.platform.init())
     {
@@ -417,6 +423,7 @@ GLFWAPI int glfwInit(void)
         !_glfwPlatformCreateTls(&_glfw.contextSlot))
     {
         terminate();
+        RLOGI_ERROR("GLFW: -Init- Creation of Mutex or Tls failed!");
         return false;
     }
 

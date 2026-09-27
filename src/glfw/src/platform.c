@@ -27,6 +27,8 @@
 
 #include "internal.h"
 
+#include "core/log.h"
+
 #include <string.h>
 #include <stdlib.h>
 
@@ -64,8 +66,7 @@ bool _glfwSelectPlatform(int desiredID, _GLFWplatform* platform)
     const size_t count = sizeof(supportedPlatforms) / sizeof(supportedPlatforms[0]);
     size_t i;
 
-    printf("supported platform count: %zu\n", count);
-        printf("selecting platform we are inside\n");
+    RLOGI_INFO("GLFW: -Init- Supported platform count: %zu", count);
 
 
     if (desiredID != GLFW_ANY_PLATFORM &&
